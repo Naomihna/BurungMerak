@@ -7,8 +7,9 @@
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Segoe UI", Arial, Helvetica, sans-serif; background: #eaf6f0; color: #22333a; }
-  header { background: linear-gradient(90deg, #0b5fa5, #0e9a8b); color: #fff; padding: 26px 20px 22px; text-align: center; }
-  header h1 { margin: 0 0 6px; font-size: 34px; letter-spacing: .5px; }
+  header { background: linear-gradient(90deg, #0b5fa5, #0e9a8b, #e8a100, #0b5fa5); background-size: 300% 100%; animation: headerShift 16s ease infinite alternate; color: #fff; padding: 26px 20px 22px; text-align: center; }
+  @keyframes headerShift { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+  header h1 { margin: 0 0 6px; font-size: 34px; letter-spacing: .5px; text-shadow: 0 2px 8px rgba(0,0,0,.25); }
   header p { margin: 4px 0; opacity: .95; }
   .wrap { max-width: 980px; margin: 0 auto; padding: 18px 16px 40px; }
   .stage { background: #fff; border: 2px solid #bfe3d6; border-radius: 18px; padding: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.08); }
@@ -20,7 +21,8 @@
   .panel h2 { margin: 0 0 10px; font-size: 19px; color: #0b5fa5; }
   .panel p { margin: 0 0 12px; line-height: 1.55; }
   .buttons { display: flex; flex-wrap: wrap; gap: 10px; }
-  button { border: none; border-radius: 12px; padding: 11px 16px; font-size: 15px; font-weight: 700; cursor: pointer; color: #fff; }
+  button { border: none; border-radius: 12px; padding: 11px 16px; font-size: 15px; font-weight: 700; cursor: pointer; color: #fff; transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+  button:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,.22); filter: brightness(1.08); }
   button:active { transform: scale(.97); }
   .btn-suara { background: #0b5fa5; }
   .btn-ekor { background: #0e9a8b; }
@@ -36,13 +38,46 @@
   .status { background: #fff7d6; border: 1px solid #f2d97a; border-radius: 10px; padding: 10px 12px; margin-top: 12px; line-height: 1.5; }
   .info { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
   @media (max-width: 700px) { .info { grid-template-columns: 1fr; } }
-  .card { background: #fff; border: 2px solid #bfe3d6; border-radius: 16px; padding: 16px; }
+  .card { background: #fff; border: 2px solid #bfe3d6; border-radius: 16px; padding: 16px; transition: transform .2s ease, box-shadow .2s ease; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0,0,0,.1); }
   .card h3 { margin: 0 0 8px; color: #0b5fa5; }
   .card p { margin: 0; line-height: 1.6; }
   footer { text-align: center; color: #5a6b70; margin-top: 22px; line-height: 1.6; }
   .cloud { animation: drift 26s linear infinite alternate; }
   .cloud2 { animation: drift 34s linear infinite alternate; }
   @keyframes drift { from { transform: translateX(-14px); } to { transform: translateX(26px); } }
+  /* Matahari berputar pelan */
+  .sunrays { transform-box: fill-box; transform-origin: center; animation: spin 40s linear infinite; opacity: .55; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  /* Kupu-kupu terbang melintasi taman */
+  .butterfly { animation: fly 22s ease-in-out infinite alternate; }
+  .butterfly2 { animation: fly 30s ease-in-out infinite alternate-reverse; }
+  @keyframes fly {
+    0% { transform: translate(0, 0) rotate(-4deg); }
+    25% { transform: translate(90px, -18px) rotate(5deg); }
+    50% { transform: translate(200px, 6px) rotate(-3deg); }
+    75% { transform: translate(300px, -22px) rotate(4deg); }
+    100% { transform: translate(400px, 0) rotate(-4deg); }
+  }
+  .wing { transform-box: fill-box; transform-origin: center; animation: flap .45s ease-in-out infinite alternate; }
+  @keyframes flap { from { transform: scaleX(1); } to { transform: scaleX(.45); } }
+  /* Kelopak bunga jatuh */
+  .petal { opacity: .9; animation: fall 11s linear infinite; }
+  .petal2 { animation-duration: 14s; animation-delay: 3s; }
+  .petal3 { animation-duration: 17s; animation-delay: 6s; }
+  @keyframes fall {
+    0% { transform: translate(0, -20px) rotate(0deg); opacity: 0; }
+    10% { opacity: .95; }
+    50% { transform: translate(28px, 260px) rotate(160deg); }
+    90% { opacity: .9; }
+    100% { transform: translate(-14px, 520px) rotate(320deg); opacity: 0; }
+  }
+  /* Bunga bergoyang pelan */
+  .flowers { transform-box: fill-box; transform-origin: bottom center; animation: sway 5s ease-in-out infinite alternate; }
+  @keyframes sway { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
+  /* Kilau ekor saat mengembang penuh */
+  #tail { transition: filter .6s ease; }
+  #tail.glow { filter: drop-shadow(0 0 16px rgba(232,161,0,.95)) drop-shadow(0 0 34px rgba(14,154,139,.55)); }
 </style>
 </head>
 <body>
@@ -64,6 +99,13 @@
         </linearGradient>
       </defs>
       <rect x="0" y="0" width="900" height="430" fill="url(#sky)"/>
+      <!-- Matahari + sinarnya -->
+      <g class="sunrays" stroke="#ffd94d" stroke-width="5" stroke-linecap="round">
+        <line x1="770" y1="2" x2="770" y2="22"/><line x1="770" y1="138" x2="770" y2="158"/>
+        <line x1="692" y1="80" x2="712" y2="80"/><line x1="828" y1="80" x2="848" y2="80"/>
+        <line x1="715" y1="25" x2="729" y2="39"/><line x1="811" y1="121" x2="825" y2="135"/>
+        <line x1="825" y1="25" x2="811" y2="39"/><line x1="729" y1="121" x2="715" y2="135"/>
+      </g>
       <circle cx="770" cy="80" r="52" fill="#ffd94d"/>
       <circle cx="770" cy="80" r="70" fill="#ffd94d" opacity=".25"/>
       <g class="cloud" fill="#ffffff" opacity=".95">
@@ -72,11 +114,26 @@
       <g class="cloud2" fill="#ffffff" opacity=".9">
         <ellipse cx="520" cy="60" rx="56" ry="20"/><ellipse cx="560" cy="48" rx="42" ry="18"/>
       </g>
+      <!-- Kupu-kupu -->
+      <g class="butterfly" transform="translate(60,150)">
+        <g class="wing" fill="#ff7aa8"><ellipse cx="-14" cy="0" rx="16" ry="11"/></g>
+        <g class="wing" fill="#ff9ec2"><ellipse cx="14" cy="0" rx="16" ry="11"/></g>
+        <ellipse cx="0" cy="0" rx="4" ry="10" fill="#5a3a5a"/>
+      </g>
+      <g class="butterfly2" transform="translate(40,230)">
+        <g class="wing" fill="#6a4fd3"><ellipse cx="-13" cy="0" rx="15" ry="10"/></g>
+        <g class="wing" fill="#9a86e8"><ellipse cx="13" cy="0" rx="15" ry="10"/></g>
+        <ellipse cx="0" cy="0" rx="4" ry="9" fill="#3a2a5a"/>
+      </g>
+      <!-- Kelopak jatuh -->
+      <g class="petal" fill="#ff7aa8"><ellipse cx="300" cy="20" rx="11" ry="7"/></g>
+      <g class="petal petal2" fill="#ffd94d"><ellipse cx="520" cy="10" rx="10" ry="6"/></g>
+      <g class="petal petal3" fill="#ffffff"><ellipse cx="180" cy="30" rx="9" ry="6"/></g>
       <circle cx="95" cy="380" r="52" fill="#3f9e57"/><circle cx="140" cy="360" r="40" fill="#57b96f"/>
       <circle cx="815" cy="375" r="48" fill="#3f9e57"/><circle cx="775" cy="355" r="36" fill="#57b96f"/>
       <rect x="0" y="430" width="900" height="130" fill="url(#grass)"/>
       <ellipse cx="450" cy="470" rx="330" ry="26" fill="#8fd17f"/>
-      <g>
+      <g class="flowers">
         <circle cx="200" cy="480" r="8" fill="#ff7aa8"/><circle cx="700" cy="490" r="8" fill="#ff7aa8"/>
         <circle cx="255" cy="505" r="7" fill="#ffffff"/><circle cx="650" cy="475" r="7" fill="#ffd94d"/>
         <circle cx="330" cy="470" r="7" fill="#ff7aa8"/><circle cx="760" cy="505" r="7" fill="#ffffff"/>
@@ -191,8 +248,7 @@
   </div>
 
   <footer>
-    Proyek Multimedia Interaktif &mdash; Hewan: Burung Merak<br>
-    Nama: ............................ &nbsp;|&nbsp; NIM: ............................
+    Proyek Multimedia Interaktif &mdash; Hewan: Burung Merak &middot; Tugas Individu 4 &middot; Sistem Multimedia
   </footer>
 </div>
 
@@ -213,6 +269,7 @@ function render() {
   document.getElementById('tariCount').textContent = state.tari + 'x';
   document.getElementById('jalanCount').textContent = state.jalan + 'x';
   document.getElementById('btnEkor').textContent = state.fanned ? 'Lipat Ekor!' : 'Kembangkan Ekor!';
+  tail.classList.toggle('glow', state.fanned);
 }
 function applyPeacock() { peacock.setAttribute('transform', 'translate(' + walkX + ',' + bobY + ')'); }
 function setFeathers(angleFn) {
