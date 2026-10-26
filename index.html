@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burung Merak - Proyek Multimedia Interaktif</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Segoe UI", Arial, Helvetica, sans-serif; background: #eaf6f0; color: #22333a; }
+  header { background: linear-gradient(90deg, #0b5fa5, #0e9a8b); color: #fff; padding: 26px 20px 22px; text-align: center; }
+  header h1 { margin: 0 0 6px; font-size: 34px; letter-spacing: .5px; }
+  header p { margin: 4px 0; opacity: .95; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 18px 16px 40px; }
+  .stage { background: #fff; border: 2px solid #bfe3d6; border-radius: 18px; padding: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .stage svg { width: 100%; height: auto; display: block; border-radius: 12px; cursor: pointer; }
+  .hint { text-align: center; margin: 10px 0 2px; font-size: 15px; }
+  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 700px) { .panels { grid-template-columns: 1fr; } }
+  .panel { background: #fff; border: 2px solid #bfe3d6; border-radius: 16px; padding: 16px 18px; box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+  .panel h2 { margin: 0 0 10px; font-size: 19px; color: #0b5fa5; }
+  .panel p { margin: 0 0 12px; line-height: 1.55; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+  button { border: none; border-radius: 12px; padding: 11px 16px; font-size: 15px; font-weight: 700; cursor: pointer; color: #fff; }
+  button:active { transform: scale(.97); }
+  .btn-suara { background: #0b5fa5; }
+  .btn-ekor { background: #0e9a8b; }
+  .btn-tari { background: #e8a100; color: #332400; }
+  .btn-jalan { background: #6a4fd3; }
+  .btn-reset { background: #e2e8e6; color: #22333a; }
+  .meter { margin: 12px 0; }
+  .meter .row { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 5px; }
+  .bar { height: 16px; background: #e2e8e6; border-radius: 10px; overflow: hidden; }
+  .bar > div { height: 100%; width: 30%; background: linear-gradient(90deg, #0b5fa5, #0e9a8b); transition: width .5s ease; }
+  .bar.ekor > div { background: linear-gradient(90deg, #e8a100, #0e9a8b); }
+  .count { display: flex; justify-content: space-between; margin: 8px 0; font-weight: 600; }
+  .status { background: #fff7d6; border: 1px solid #f2d97a; border-radius: 10px; padding: 10px 12px; margin-top: 12px; line-height: 1.5; }
+  .info { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 700px) { .info { grid-template-columns: 1fr; } }
+  .card { background: #fff; border: 2px solid #bfe3d6; border-radius: 16px; padding: 16px; }
+  .card h3 { margin: 0 0 8px; color: #0b5fa5; }
+  .card p { margin: 0; line-height: 1.6; }
+  footer { text-align: center; color: #5a6b70; margin-top: 22px; line-height: 1.6; }
+  .cloud { animation: drift 26s linear infinite alternate; }
+  .cloud2 { animation: drift 34s linear infinite alternate; }
+  @keyframes drift { from { transform: translateX(-14px); } to { transform: translateX(26px); } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Burung Merak</h1>
+  <p>Proyek Multimedia Interaktif &mdash; Gambar, Suara, dan Gerak dalam satu halaman</p>
+  <p>Tugas Individu 4 &middot; Sistem Multimedia</p>
+</header>
+
+<div class="wrap">
+  <div class="stage">
+    <svg id="scene" viewBox="0 0 900 560" role="img" aria-label="Burung merak di taman">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8ed0ff"/><stop offset="100%" stop-color="#eafaff"/>
+        </linearGradient>
+        <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7ec96a"/><stop offset="100%" stop-color="#4da851"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="900" height="430" fill="url(#sky)"/>
+      <circle cx="770" cy="80" r="52" fill="#ffd94d"/>
+      <circle cx="770" cy="80" r="70" fill="#ffd94d" opacity=".25"/>
+      <g class="cloud" fill="#ffffff" opacity=".95">
+        <ellipse cx="150" cy="90" rx="62" ry="24"/><ellipse cx="195" cy="75" rx="48" ry="22"/>
+      </g>
+      <g class="cloud2" fill="#ffffff" opacity=".9">
+        <ellipse cx="520" cy="60" rx="56" ry="20"/><ellipse cx="560" cy="48" rx="42" ry="18"/>
+      </g>
+      <circle cx="95" cy="380" r="52" fill="#3f9e57"/><circle cx="140" cy="360" r="40" fill="#57b96f"/>
+      <circle cx="815" cy="375" r="48" fill="#3f9e57"/><circle cx="775" cy="355" r="36" fill="#57b96f"/>
+      <rect x="0" y="430" width="900" height="130" fill="url(#grass)"/>
+      <ellipse cx="450" cy="470" rx="330" ry="26" fill="#8fd17f"/>
+      <g>
+        <circle cx="200" cy="480" r="8" fill="#ff7aa8"/><circle cx="700" cy="490" r="8" fill="#ff7aa8"/>
+        <circle cx="255" cy="505" r="7" fill="#ffffff"/><circle cx="650" cy="475" r="7" fill="#ffd94d"/>
+        <circle cx="330" cy="470" r="7" fill="#ff7aa8"/><circle cx="760" cy="505" r="7" fill="#ffffff"/>
+      </g>
+
+      <g id="peacock" transform="translate(0,0)">
+        <ellipse cx="520" cy="492" rx="130" ry="14" fill="#000000" opacity=".15"/>
+        <g id="tail" transform="translate(470,395)">
+          <!-- 9 bulu ekor, sudut buka dan tutup disimpan di data-open / data-closed -->
+          <g class="feather" data-open="-80" data-closed="-18" transform="translate(0,0) rotate(-18)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2f9e7e"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0e9a8b"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+          <g class="feather" data-open="-60" data-closed="-14" transform="translate(0,0) rotate(-14)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2a8f8a"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0b5fa5"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+          <g class="feather" data-open="-40" data-closed="-10" transform="translate(0,0) rotate(-10)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2f9e7e"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0e9a8b"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+          <g class="feather" data-open="-20" data-closed="-6" transform="translate(0,0) rotate(-6)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2a8f8a"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0b5fa5"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+          <g class="feather" data-open="0" data-closed="-2" transform="translate(0,0) rotate(-2)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2f9e7e"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0e9a8b"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+          <g class="feather" data-open="20" data-closed="2" transform="translate(0,0) rotate(2)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2a8f8a"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0b5fa5"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+          <g class="feather" data-open="40" data-closed="6" transform="translate(0,0) rotate(6)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2f9e7e"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0e9a8b"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+          <g class="feather" data-open="60" data-closed="10" transform="translate(0,0) rotate(10)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2a8f8a"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0b5fa5"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+          <g class="feather" data-open="80" data-closed="14" transform="translate(0,0) rotate(14)">
+            <path d="M -14 0 Q -20 -110 0 -195 Q 20 -110 14 0 Z" fill="#2f9e7e"/>
+            <circle cx="0" cy="-162" r="27" fill="#e8a100"/><circle cx="0" cy="-162" r="17" fill="#0e9a8b"/><circle cx="0" cy="-162" r="8" fill="#123a5e"/>
+          </g>
+        </g>
+        <!-- kaki -->
+        <g stroke="#8a5a2b" stroke-width="7" stroke-linecap="round">
+          <line x1="510" y1="435" x2="510" y2="485"/><line x1="570" y1="435" x2="570" y2="485"/>
+        </g>
+        <!-- badan -->
+        <ellipse cx="540" cy="382" rx="96" ry="62" fill="#1d6fd1"/>
+        <ellipse cx="560" cy="398" rx="62" ry="34" fill="#2f8fe8"/>
+        <path d="M 500 350 Q 545 330 575 360 Q 545 385 505 378 Z" fill="#0e9a8b" opacity=".85"/>
+        <!-- leher dan kepala -->
+        <path d="M 585 355 Q 622 305 612 242" stroke="#1d6fd1" stroke-width="34" fill="none" stroke-linecap="round"/>
+        <circle cx="612" cy="226" r="33" fill="#1d6fd1"/>
+        <g stroke="#0e9a8b" stroke-width="4" stroke-linecap="round">
+          <line x1="600" y1="198" x2="592" y2="172"/><line x1="612" y1="195" x2="612" y2="168"/><line x1="624" y1="198" x2="632" y2="172"/>
+        </g>
+        <g fill="#0e9a8b"><circle cx="592" cy="168" r="7"/><circle cx="612" cy="164" r="7"/><circle cx="632" cy="168" r="7"/></g>
+        <polygon points="642,220 674,228 642,238" fill="#f2b705"/>
+        <circle cx="620" cy="220" r="7" fill="#ffffff"/><circle cx="622" cy="220" r="3.5" fill="#111111"/>
+      </g>
+    </svg>
+    <p class="hint">Klik gambar meraknya untuk mendengar suaranya, atau pakai tombol di bawah ini.</p>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>Kontrol Merak</h2>
+      <p>Setiap tombol menjalankan satu perilaku khas burung merak, dan status di sebelahnya akan ikut berubah.</p>
+      <div class="buttons">
+        <button class="btn-suara" id="btnSuara">Bersuara!</button>
+        <button class="btn-ekor" id="btnEkor">Kembangkan Ekor!</button>
+        <button class="btn-tari" id="btnTari">Menari!</button>
+        <button class="btn-jalan" id="btnJalan">Jalan-jalan!</button>
+        <button class="btn-reset" id="btnReset">Ulangi</button>
+      </div>
+      <div class="status" id="statusText">Merak sedang bersantai di taman. Coba tekan salah satu tombol di atas.</div>
+    </div>
+
+    <div class="panel">
+      <h2>Status Merak</h2>
+      <div class="meter">
+        <div class="row"><span>Ekor Mengembang</span><span id="ekorLabel">0%</span></div>
+        <div class="bar ekor"><div id="ekorBar" style="width:0%"></div></div>
+      </div>
+      <div class="meter">
+        <div class="row"><span>Semangat</span><span id="semangatLabel">30%</span></div>
+        <div class="bar"><div id="semangatBar" style="width:30%"></div></div>
+      </div>
+      <div class="count"><span>Jumlah Suara</span><span id="suaraCount">0x</span></div>
+      <div class="count"><span>Jumlah Tarian</span><span id="tariCount">0x</span></div>
+      <div class="count"><span>Langkah Jalan</span><span id="jalanCount">0x</span></div>
+    </div>
+  </div>
+
+  <div class="info">
+    <div class="card">
+      <h3>1. Gambar (Visual)</h3>
+      <p>Merak digambar lengkap dengan badan biru, jambul di kepala, dan ekor panjang bercorak mata berwarna emas, hijau, dan biru, di atas latar taman yang cerah.</p>
+    </div>
+    <div class="card">
+      <h3>2. Suara (Audio)</h3>
+      <p>Suara merak dibuat dengan Web Audio, yaitu bunyi melengking yang nadanya turun, seperti teriakan khas merak, dan berbunyi setiap tombol Bersuara ditekan atau meraknya diklik.</p>
+    </div>
+    <div class="card">
+      <h3>3. Gerak (Animasi)</h3>
+      <p>Gerakannya meniru perilaku asli merak, yaitu ekor yang mengembang seperti kipas, badan yang bergoyang saat menari, dan langkah berjalan menyusuri taman.</p>
+    </div>
+  </div>
+
+  <footer>
+    Proyek Multimedia Interaktif &mdash; Hewan: Burung Merak<br>
+    Nama: ............................ &nbsp;|&nbsp; NIM: ............................
+  </footer>
+</div>
+
+<script>
+var state = { ekor: 0, fanned: false, semangat: 30, suara: 0, tari: 0, jalan: 0, busy: false };
+var peacock = document.getElementById('peacock');
+var tail = document.getElementById('tail');
+var feathers = Array.prototype.slice.call(document.querySelectorAll('.feather'));
+var walkX = 0, bobY = 0, runToken = 0;
+
+function setStatus(text) { document.getElementById('statusText').textContent = text; }
+function render() {
+  document.getElementById('ekorLabel').textContent = state.ekor + '%';
+  document.getElementById('ekorBar').style.width = state.ekor + '%';
+  document.getElementById('semangatLabel').textContent = state.semangat + '%';
+  document.getElementById('semangatBar').style.width = state.semangat + '%';
+  document.getElementById('suaraCount').textContent = state.suara + 'x';
+  document.getElementById('tariCount').textContent = state.tari + 'x';
+  document.getElementById('jalanCount').textContent = state.jalan + 'x';
+  document.getElementById('btnEkor').textContent = state.fanned ? 'Lipat Ekor!' : 'Kembangkan Ekor!';
+}
+function applyPeacock() { peacock.setAttribute('transform', 'translate(' + walkX + ',' + bobY + ')'); }
+function setFeathers(angleFn) {
+  feathers.forEach(function (f) { f.setAttribute('transform', 'translate(0,0) rotate(' + angleFn(f) + ')'); });
+}
+function animateFeathers(toOpen, done) {
+  var start = Date.now(), dur = 850;
+  var from = feathers.map(function (f) {
+    var m = f.getAttribute('transform').match(/rotate\((-?[\d.]+)\)/);
+    return m ? parseFloat(m[1]) : 0;
+  });
+  var to = feathers.map(function (f) { return parseFloat(toOpen ? f.getAttribute('data-open') : f.getAttribute('data-closed')); });
+  (function step() {
+    var p = Math.min(1, (Date.now() - start) / dur);
+    var eased = 1 - Math.pow(1 - p, 3);
+    feathers.forEach(function (f, i) { f.setAttribute('transform', 'translate(0,0) rotate(' + (from[i] + (to[i] - from[i]) * eased) + ')'); });
+    if (p < 1) { requestAnimationFrame(step); } else if (done) { done(); }
+  })();
+}
+function audioCtx() {
+  if (!window._ctx) { window._ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+  if (window._ctx.state === 'suspended') { window._ctx.resume(); }
+  return window._ctx;
+}
+function playCall() {
+  try {
+    var ctx = audioCtx(), now = ctx.currentTime;
+    [0, 0.6].forEach(function (delay) {
+      var t = now + delay;
+      var osc = ctx.createOscillator(), gain = ctx.createGain(), filter = ctx.createBiquadFilter();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(1150, t);
+      osc.frequency.exponentialRampToValueAtTime(520, t + 0.5);
+      filter.type = 'lowpass'; filter.frequency.value = 2000;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.22, t + 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+      osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.6);
+    });
+  } catch (e) { /* audio tidak tersedia, animasi tetap jalan */ }
+}
+function playRustle() {
+  try {
+    var ctx = audioCtx(), now = ctx.currentTime, len = ctx.sampleRate * 0.6;
+    var buf = ctx.createBuffer(1, len, ctx.sampleRate), data = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) { data[i] = (Math.random() * 2 - 1) * (1 - i / len); }
+    var src = ctx.createBufferSource(), gain = ctx.createGain(), filter = ctx.createBiquadFilter();
+    src.buffer = buf; filter.type = 'bandpass'; filter.frequency.value = 900;
+    gain.gain.setValueAtTime(0.12, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination); src.start(now);
+  } catch (e) {}
+}
+function bob(ms) {
+  var start = Date.now();
+  (function step() {
+    var p = (Date.now() - start) / ms;
+    if (p >= 1) { bobY = 0; applyPeacock(); return; }
+    bobY = -8 * Math.sin(p * Math.PI * 4);
+    applyPeacock();
+    requestAnimationFrame(step);
+  })();
+}
+document.getElementById('btnSuara').addEventListener('click', function () {
+  playCall(); bob(900);
+  state.suara += 1; state.semangat = Math.min(100, state.semangat + 10);
+  setStatus('Merak bersuara nyaring! Itu teriakan khas merak yang nadanya turun.');
+  render();
+});
+document.getElementById('scene').addEventListener('click', function () {
+  playCall(); bob(900);
+  state.suara += 1; state.semangat = Math.min(100, state.semangat + 10);
+  setStatus('Merak bersuara nyaring! Itu teriakan khas merak yang nadanya turun.');
+  render();
+});
+document.getElementById('btnEkor').addEventListener('click', function () {
+  if (state.busy) { return; }
+  state.busy = true; playRustle();
+  var opening = !state.fanned;
+  animateFeathers(opening, function () {
+    state.fanned = opening; state.ekor = opening ? 100 : 0; state.busy = false;
+    setStatus(opening ? 'Ekor merak mengembang penuh seperti kipas, dengan corak mata yang terlihat jelas.' : 'Ekor merak terlipat kembali ke posisi semula.');
+    render();
+  });
+});
+document.getElementById('btnTari').addEventListener('click', function () {
+  if (state.busy) { return; }
+  state.busy = true; state.tari += 1; state.semangat = Math.min(100, state.semangat + 15);
+  var myRun = ++runToken;
+  if (!state.fanned) { animateFeathers(true, function () { if (myRun !== runToken) { return; } state.fanned = true; state.ekor = 100; render(); }); }
+  setStatus('Merak menari! Badannya bergoyang dan ekornya bergetar sambil memamerkan ekornya.');
+  var start = Date.now(), base = feathers.map(function (f) {
+    var m = f.getAttribute('transform').match(/rotate\((-?[\d.]+)\)/); return m ? parseFloat(m[1]) : 0;
+  });
+  (function step() {
+    if (myRun !== runToken) { return; }
+    var p = (Date.now() - start) / 3000;
+    if (p >= 1) {
+      bobY = 0; walkX = 0; applyPeacock();
+      setFeathers(function (f) { return parseFloat(f.getAttribute('data-open')); });
+      state.busy = false; render(); return;
+    }
+    bobY = -7 * Math.abs(Math.sin(p * Math.PI * 6));
+    walkX = 14 * Math.sin(p * Math.PI * 6);
+    applyPeacock();
+    feathers.forEach(function (f, i) {
+      var target = state.fanned ? parseFloat(f.getAttribute('data-open')) : base[i];
+      f.setAttribute('transform', 'translate(0,0) rotate(' + (target + 5 * Math.sin(p * Math.PI * 12 + i)) + ')');
+    });
+    requestAnimationFrame(step);
+  })();
+  render();
+});
+document.getElementById('btnJalan').addEventListener('click', function () {
+  if (state.busy) { return; }
+  state.busy = true; state.jalan += 1; state.semangat = Math.min(100, state.semangat + 5);
+  setStatus('Merak berjalan pelan menyusuri taman, lalu kembali ke tempat semula.');
+  var start = Date.now(), fromX = walkX, myRun = ++runToken;
+  (function step() {
+    if (myRun !== runToken) { return; }
+    var p = (Date.now() - start) / 2600;
+    if (p >= 1) { walkX = fromX; bobY = 0; applyPeacock(); state.busy = false; render(); return; }
+    walkX = fromX + 130 * Math.sin(p * Math.PI);
+    bobY = -4 * Math.abs(Math.sin(p * Math.PI * 8));
+    applyPeacock();
+    requestAnimationFrame(step);
+  })();
+  render();
+});
+document.getElementById('btnReset').addEventListener('click', function () {
+  runToken++;
+  state = { ekor: 0, fanned: false, semangat: 30, suara: 0, tari: 0, jalan: 0, busy: false };
+  walkX = 0; bobY = 0; applyPeacock();
+  setFeathers(function (f) { return parseFloat(f.getAttribute('data-closed')); });
+  setStatus('Merak sedang bersantai di taman. Coba tekan salah satu tombol di atas.');
+  render();
+});
+render();
+</script>
+</body>
+</html>
